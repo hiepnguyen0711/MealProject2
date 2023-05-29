@@ -8,7 +8,8 @@ function CategoryScreen({ navigation }){
     function renderCategoryItem(itemData){
         function ChangeMealScreenHandler(){
             navigation.navigate('meals', {
-               'cateogyId': itemData.item.id} );
+               cateogyId: itemData.item.id,
+               title: itemData.item.title}  );
         }
         return(
             <CategoryGirdItem title={itemData.item.title} color={itemData.item.color} onPress={ChangeMealScreenHandler} />

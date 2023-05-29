@@ -2,22 +2,38 @@ import { Image, Text, View, StyleSheet } from "react-native";
 import { MEALS } from "../data/dummy-data";
 import { useLayoutEffect } from "react";
 import IconButton from "../components/IconButton";
+import { useDispatch, useSelector } from "react-redux";
+import { addFavorites, removeFavorites } from '../store/redux/favorite';
 
 function MealDetailScreen({route, navigation }){
     const mealIds = route.params.mealId;
+    const mealTitle = route.params.title;
     const displayDetail = MEALS.find((meal) => meal.id === mealIds)
 
+    const favoriteMealIds = useSelector((state) => state.favoriteMeals.ids );
+    const dispatch = useDispatch();
+
+    const mealIsFavorite = favoriteMealIds.includes(mealIds);
+
     function headerButtonPressHandler(){
-        console.log('abc');
+        if(mealIsFavorite){
+            dispatch(removeFavorites({id : mealIds }));
+        }else {
+            dispatch(addFavorites({id: mealIds }));
+        }
     }
 
     useLayoutEffect(() => {
         navigation.setOptions({
             headerRight: () => {
-                return <IconButton icon="star" color="white" onPress={headerButtonPressHandler} />
-            }
+                return <IconButton 
+                icon={ mealIsFavorite ? 'star' : 'star-outline' }
+                color="white" 
+                onPress={headerButtonPressHandler} />
+            },
+            title: mealTitle
         })
-    }, [navigation, headerButtonPressHandler]);
+    }, [navigation, headerButtonPressHandler, mealTitle]);
     
 
     return(
